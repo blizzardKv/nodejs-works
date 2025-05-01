@@ -41,17 +41,28 @@ const workerFunction = (arr) => {
     return new Promise((resolve, reject) => {
         const arrSplitByCoresCount = splitArrayIntoParts(arr);
 
+        performance.mark('worker start');
+        let results = [];
+        let completed = 0;
+
+        let acc = 0;
         for (let i = 0; i < arrSplitByCoresCount.length; i++) {
-            performance.mark('worker start');
             const worker = new Worker('./worker.js', {
                 workerData: arrSplitByCoresCount[i],
             });
 
             worker.on('message', (msg) => {
-                performance.mark('worker end');
-                performance.measure('worker', 'worker start', 'worker end');
+                results.push(msg);
+                completed++;
 
-                resolve(msg);
+                if (completed === arrSplitByCoresCount.length) {
+                    const total = results.reduce((a, b) => a + b, 0);
+
+                    performance.mark('worker end');
+                    performance.measure('worker', 'worker start', 'worker end');
+
+                    resolve(total);
+                }
             })
         }
     })
