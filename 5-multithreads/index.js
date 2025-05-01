@@ -60,7 +60,7 @@ const workerFunction = (arr) => {
 // при больших значениях - worker работает быстрее, при небольших - синхронные вычисления быстрее
 const fn = async () => {
     try {
-        calculateSync(arr);
+        calculateSync(arrClone);
         await workerFunction(arr);
     } catch (e) {
         console.error(e.message);
