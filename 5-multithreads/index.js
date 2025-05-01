@@ -31,7 +31,7 @@ const splitArrayIntoParts = (arr, partsCount = 8) => {
 const calculateSync = (arrClone) => {
     performance.mark('sync calc start');
 
-    const count = arrClone.filter((it) => it % 3 === 0).length;
+    arrClone.filter((it) => it % 3 === 0)?.length;
 
     performance.mark('sync calc end');
     performance.measure('sync', 'sync calc start', 'sync calc end');
@@ -60,7 +60,7 @@ const workerFunction = (arr) => {
 // при больших значениях - worker работает быстрее, при небольших - синхронные вычисления быстрее
 const fn = async () => {
     try {
-        await calculateSync(arr);
+        calculateSync(arr);
         await workerFunction(arr);
     } catch (e) {
         console.error(e.message);
